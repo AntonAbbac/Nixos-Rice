@@ -100,6 +100,7 @@
 
       # NixOS / Home Manager
       rebuild = "sudo nixos-rebuild switch";
+      rebuild-flakes = "sudo nixos-rebuild switch --flake /etc/nixos#nixos";
       rebuild-test = "sudo nixos-rebuild test";
       hm-news = "home-manager news";
       nix-clean = "sudo nix-collect-garbage -d";

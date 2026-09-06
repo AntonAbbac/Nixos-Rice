@@ -12,7 +12,6 @@
 
     # Editores
     vscode
-    neovim
     tmux
 
     # Controle de versão
@@ -46,7 +45,8 @@
     gdb
 
     # Formatters / LSPs
-    python311Packages.python-lsp-server
+    pyright
+    ruff
     black
     prettier
     typescript-language-server
