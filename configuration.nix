@@ -105,6 +105,19 @@
     ];
   };
 
+    users.users.miranha = {
+    isNormalUser = true;
+    extraGroups = [
+      "wheel"
+      "video"
+      "input"
+    ]; # Enable `sudo` for the user.
+    shell = pkgs.zsh;
+    packages = with pkgs; [
+      tree
+    ];
+  };
+
   # Precisa estar habilitado no nível do sistema para o zsh ser registrado
   # em /etc/shells — senão o `shell = pkgs.zsh` acima falha silenciosamente
   # ou o login não aceita o shell. A configuração de verdade (aliases,
