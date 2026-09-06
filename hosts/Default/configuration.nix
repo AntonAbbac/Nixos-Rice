@@ -3,7 +3,6 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
 {
-  config,
   lib,
   pkgs,
   ...
@@ -15,20 +14,13 @@
     ./hardware-configuration.nix
     # O módulo home-manager para NixOS é importado no flake.nix
     # (via inputs.home-manager.nixosModules.home-manager), não aqui.
+    ../../modules/core/default.nix
+
   ];
 
   ##############################################################
   # Boot
   ##############################################################
-
-  boot.loader.grub = {
-    enable = true;
-    efiSupport = true;
-    device = "nodev";
-    efiInstallAsRemovable = true;
-  };
-  boot.loader.systemd-boot.enable = false;
-  boot.loader.efi.canTouchEfiVariables = false;
 
   ##############################################################
   # Swap
@@ -105,7 +97,7 @@
     ];
   };
 
-    users.users.miranha = {
+  users.users.miranha = {
     isNormalUser = true;
     extraGroups = [
       "wheel"
@@ -132,10 +124,11 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "backup";
-    users.anton = import ./home.nix;
+    users.anton = import ../../modules/default.nix;
   };
 
-  ##############################################################
+  ############################
+  ##################################
   # Development (containers)
   ##############################################################
 
@@ -162,7 +155,9 @@
   ##############################################################
   # Packages
   ##############################################################
-
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-39.8.10"
+  ];
   nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile.

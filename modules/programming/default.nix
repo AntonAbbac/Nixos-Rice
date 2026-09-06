@@ -13,6 +13,7 @@
     # Editores
     vscode
     tmux
+zed-editor
 
     # Controle de versão
     git

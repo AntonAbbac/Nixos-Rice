@@ -3,7 +3,7 @@
 {
   home.packages = with pkgs; [
     waybar
-    swww          # wallpaper daemon (substitui hyprpaper, suporta transições)
+    swww # wallpaper daemon (substitui hyprpaper, suporta transições)
     grim
     slurp
     wl-clipboard
@@ -33,7 +33,7 @@
 
       exec-once = waybar
       exec-once = swww-daemon
-      exec-once = swww img ~/.config/hypr/wallpaper.png
+      exec-once = swww img ~/dotfiles/nixos/modules/themes/wallpapers/wallpaper.png
       exec-once = nm-applet
       exec-once = dunst
 

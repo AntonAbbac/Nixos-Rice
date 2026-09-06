@@ -2,18 +2,30 @@
 
 {
   ##############################################################
-  # Ferramentas modernas de CLI (substitutas das clássicas)
+  # Shell padrão e pacotes CLI do sistema
   ##############################################################
 
-  home.packages = with pkgs; [
-    eza          # ls
-    bat          # cat
-    zoxide       # cd (com memória de diretórios frequentes)
-    fzf          # busca fuzzy (histórico, arquivos)
-    ripgrep      # grep
-    fd           # find
-    dust         # du (uso de disco)
-    procs        # ps
+  # Define o Zsh como o shell padrão para o sistema
+  environment.shells = [ pkgs.zsh ];
+  users.defaultUserShell = pkgs.zsh;
+
+  environment.systemPackages = with pkgs; [
+    # Ferramentas CLI modernas
+    eza # ls
+    bat # cat
+    zoxide # cd com memória
+    fzf # busca fuzzy
+    ripgrep # grep
+    fd # find
+    dust # du
+    procs # ps
+
+    # Ferramentas de suporte para as funções/aliases
+    git
+    lsof # Necessário para a função killport
+    unzip # Necessário para a função extract
+    p7zip # Extração de .7z
+    gnutar # Extração de .tar.*
   ];
 
   ##############################################################
@@ -22,22 +34,16 @@
 
   programs.zsh = {
     enable = true;
-
-    autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
     enableCompletion = true;
+    autosuggestions.enable = true;
+    syntaxHighlighting.enable = true;
 
-    history = {
-      size = 50000;
-      save = 50000;
-      ignoreDups = true;
-      ignoreAllDups = true;
-      ignoreSpace = true;
-      share = true;
-    };
+    # Configurações de Histórico
+    histSize = 50000;
+    histFile = "$HOME/.zsh_history";
 
     # ------------------------------------------------------------
-    # Aliases
+    # Aliases Globais
     # ------------------------------------------------------------
     shellAliases = {
       # Navegação
@@ -67,7 +73,7 @@
       # ps -> procs
       ps = "procs";
 
-      # Git — os mais usados no dia a dia
+      # Git
       g = "git";
       gs = "git status -sb";
       ga = "git add";
@@ -98,10 +104,10 @@
       dexec = "docker exec -it";
       dprune = "docker system prune -f";
 
-      # NixOS / Home Manager
-      rebuild = "sudo nixos-rebuild switch";
-      rebuild-flakes = "sudo nixos-rebuild switch --flake /etc/nixos#nixos";
-      rebuild-test = "sudo nixos-rebuild test";
+      # NixOS
+      # NOTA: Ajustado o caminho de /etc/nixos para ~/dotfiles/nixos conforme o seu setup!
+      rebuild = "cd ~/dotfiles/nixos && git add -A && git commit -m 'wip' --allow-empty-message -m '' ; sudo nixos-rebuild switch --flake ~/dotfiles/nixos#nixos";
+      rebuild-test = "sudo nixos-rebuild test --flake ~/dotfiles/nixos#nixos";
       hm-news = "home-manager news";
       nix-clean = "sudo nix-collect-garbage -d";
       nix-search = "nix search nixpkgs";
@@ -132,15 +138,21 @@
     };
 
     # ------------------------------------------------------------
-    # Funções e "aliases inteligentes" (dependem de argumento/contexto)
+    # Funções e Inicialização Interativa
     # ------------------------------------------------------------
-    initContent = ''
+    interactiveShellInit = ''
+      # Opções do Zsh History
+      setopt HIST_IGNORE_DUPS
+      setopt HIST_IGNORE_ALL_DUPS
+      setopt HIST_IGNORE_SPACE
+      setopt SHARE_HISTORY
+
       # mkdir + cd num comando só
       mkcd() {
         mkdir -p "$1" && cd "$1"
       }
 
-      # Extrai qualquer arquivo compactado, detectando o tipo sozinho
+      # Extrai qualquer arquivo compactado
       extract() {
         if [ -f "$1" ]; then
           case "$1" in
@@ -162,18 +174,17 @@
         fi
       }
 
-      # git commit + push num comando (gcp "mensagem")
+      # git commit + push num comando
       gcp() {
         git commit -m "$1" && git push
       }
 
-      # git clone e já entra na pasta
+      # git clone e entra na pasta
       gclone() {
         git clone "$1" && cd "$(basename "$1" .git)"
       }
 
-      # cd inteligente: se o argumento for um arquivo, entra na pasta dele
-      # (chamada explícita "cdf", não sobrescreve o cd padrão)
+      # cd inteligente para arquivos
       cdf() {
         if [ -f "$1" ]; then
           builtin cd "$(dirname "$1")"
@@ -182,7 +193,7 @@
         fi
       }
 
-      # Busca um processo pelo nome e mostra PID
+      # Busca um processo pelo nome
       psg() {
         procs | rg -i "$1"
       }
@@ -192,15 +203,12 @@
         lsof -ti :"$1" | xargs kill -9
       }
 
-      # Cria um backup rápido de um arquivo (arquivo.txt -> arquivo.txt.bak)
+      # Cria um backup rápido de um arquivo
       bak() {
         cp "$1" "$1.bak"
       }
 
-      # zoxide
-      eval "$(zoxide init zsh)"
-
-      # fzf: Ctrl+R (histórico) e Ctrl+T (arquivos) com preview
+      # fzf: Configurações de teclado e preview com bat/eza
       source ${pkgs.fzf}/share/fzf/key-bindings.zsh
       source ${pkgs.fzf}/share/fzf/completion.zsh
       export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"
@@ -209,20 +217,17 @@
   };
 
   ##############################################################
-  # Ferramentas usadas pelos aliases/funções acima
+  # Ferramentas CLI Globais
   ##############################################################
 
   programs.zoxide = {
     enable = true;
-    enableZshIntegration = true;
   };
 
   programs.fzf = {
-    enable = true;
-    enableZshIntegration = true;
+    keybindings = true;
+    fuzzyCompletion = true;
   };
-
-  programs.bat.enable = true;
 
   ##############################################################
   # Prompt: Starship
@@ -230,7 +235,6 @@
 
   programs.starship = {
     enable = true;
-    enableZshIntegration = true;
 
     settings = {
       add_newline = true;

@@ -2,7 +2,17 @@
 
 {
   imports = [
-    ./modules/index-modules.nix
+    ./desktop/hyprland
+
+    ./programs/terminal/kitty
+
+    ./desktop/hyprland/programs/dunst
+
+    ./desktop/hyprland/programs/rofi
+    ./desktop/hyprland/programs/waybar
+
+    ./programming
+
   ];
 
   ##############################################################
@@ -28,7 +38,7 @@
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
-    ".config/hypr/wallpaper.png".source = ./wallpapers/wallpaper.png;
+    "./modules/themes/wallpapers/wallpaper.png".source = ./themes/wallpapers/wallpaper.png;
   };
 
   ##############################################################
@@ -36,7 +46,7 @@
   ##############################################################
 
   home.sessionVariables = {
-    # EDITOR = "emacs";
+    EDITOR = "micro";
   };
 
   ##############################################################
