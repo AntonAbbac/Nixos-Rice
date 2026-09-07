@@ -106,7 +106,7 @@
 
       # NixOS
       # NOTA: Ajustado o caminho de /etc/nixos para ~/dotfiles/nixos conforme o seu setup!
-      rebuild = "cd ~/dotfiles/nixos && git add -A && git commit -m 'wip' --allow-empty-message -m '' ; sudo nixos-rebuild switch --flake ~/dotfiles/nixos#nixos";
+      rebuild = "cd ~/dotfiles/nixos && git add -A && --allow-empty-message -m '' ; sudo nixos-rebuild switch --flake ~/dotfiles/nixos#nixos";
       rebuild-test = "sudo nixos-rebuild test --flake ~/dotfiles/nixos#nixos";
       hm-news = "home-manager news";
       nix-clean = "sudo nix-collect-garbage -d";
