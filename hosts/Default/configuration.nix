@@ -35,18 +35,6 @@
   # Keyboard layout used by Wayland/XWayland apps.
   console.keyMap = "br-abnt2";
 
-  ##############################################################
-  # Audio
-  ##############################################################
-
-  services.pipewire = {
-    enable = true;
-    pulse.enable = true;
-  };
-  ##############################################################
-  # Home Manager
-  ##############################################################
-
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -88,7 +76,7 @@
 
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+
  # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "26.05"; # Did you read the comment?
 }

@@ -10,5 +10,6 @@
     ./thunar.nix
     ./virtualisation.nix
     ./fonts.nix
+    ./services.nix
   ];
 }
