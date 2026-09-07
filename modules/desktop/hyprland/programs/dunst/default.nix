@@ -1,14 +1,19 @@
 { config, pkgs, ... }:
 
 {
+
+  home.packages = with pkgs; [
+    dunst
+    libnotify # Adicione esta linha
+  ];
   services.dunst = {
     enable = true;
 
     settings = {
       global = {
         width = 300;
-        height = 100;
-        offset = "10x40";
+        height = "(30, 100)";
+        offset = "(10, 40)";
         origin = "top-right";
         transparency = 10;
         frame_color = "#cba6f7";

@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
+
 {
+
   home.packages = with pkgs; [
     waybar
     swww # wallpaper daemon (substitui hyprpaper, suporta transições)
@@ -14,6 +16,21 @@
     networkmanagerapplet
   ];
 
+  home.pointerCursor = {
+      gtk.enable = true;
+      x11.enable = true;
+      package = pkgs.bibata-cursors; # Substitua pelo tema desejado (ex: pkgs.catppuccin-cursors)
+      name = "Bibata-Modern-Classic"; # Nome exato da pasta do tema
+      size = 24;                     # Tamanho do cursor
+    };
+  wayland.windowManager.hyprland.settings = {
+      env = [
+        "HYPRCURSOR_THEME,Bibata-Modern-Classic"
+        "HYPRCURSOR_SIZE,24"
+        "XCURSOR_THEME,Bibata-Modern-Classic"
+        "XCURSOR_SIZE,24"
+      ];
+  };
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -38,9 +55,6 @@
       exec-once = dunst
 
       # ENVIRONMENT VARIABLES
-
-      env = XCURSOR_SIZE, 20
-      env = HYPRCURSOR_SIZE, 20
 
       # LOOK AND FEEL
 

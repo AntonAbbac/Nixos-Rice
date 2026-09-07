@@ -11,7 +11,6 @@
     nix-direnv
 
     # Editores
-    vscode
     tmux
 zed-editor
 
