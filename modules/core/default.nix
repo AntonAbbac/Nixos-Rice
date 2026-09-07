@@ -12,5 +12,6 @@
     ./fonts.nix
     ./services.nix
     ./packages.nix
+    ./ssh.nix
   ];
 }
