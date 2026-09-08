@@ -1,35 +1,55 @@
 {
-  description = "Configuração NixOS do anton — Hyprland + Home Manager";
+  description = "Configuração NixOS — Hyprland + Home Manager";
 
   inputs = {
-    # nixos-25.11 é o release estável mais recente no momento desta config.
-    # Trocar para "nixos-unstable" se quiser pacotes mais novos (com o
-    # trade-off de menos testagem).
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
+
+    # URL oficial e funcional do nix-flatpak
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
+
+    hyprland.url = "github:hyprwm/Hyprland";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
-      # Garante que o Home Manager usa exatamente o mesmo nixpkgs do
-      # sistema, em vez de baixar sua própria cópia — evita duplicação
-      # e inconsistência de versões entre system e user packages.
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs =
+    { self, nixpkgs, home-manager, ... }@inputs:
+    let
+      mkHost = { hostname, username }:
+        nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+
+          # Passamos o inputs e o username para os módulos do NixOS
+          specialArgs = { inherit inputs username; };
+
+          modules = [
+            ./hosts/${hostname}/configuration.nix
+
+            # Módulo do nix-flatpak importado
+            inputs.nix-flatpak.nixosModules.nix-flatpak
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
+
+              # Passamos o inputs e o username para os módulos do Home Manager
+              home-manager.extraSpecialArgs = { inherit inputs username; };
+
+              home-manager.users.${username} = import ./modules/default.nix;
+            }
+          ];
+        };
+    in
     {
-      self,
-      nixpkgs,
-      home-manager,
-      ...
-    }:
-    {
-      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          ./hosts/Default/configuration.nix
-          home-manager.nixosModules.home-manager
-        ];
+      nixosConfigurations = {
+        nixos = mkHost { hostname = "Default"; username = "anton"; };
+        outro-pc = mkHost { hostname = "outro-pc"; username = "miranha"; };
       };
     };
 }

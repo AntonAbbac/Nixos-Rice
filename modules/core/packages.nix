@@ -8,7 +8,15 @@
     firefox
     unzip
     zip
+    obsidian
   ];
+
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-39.8.10"
+    "librewolf-152.0.2-1"
+    "librewolf-unwrapped-152.0.2-1"
+  ];
+  nixpkgs.config.allowUnfree = true;
 
 
 }

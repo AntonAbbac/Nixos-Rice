@@ -20,7 +20,6 @@ zed-editor
     gh
 
     # Frontend
-    nodejs_20
     yarn
     pnpm
 
@@ -33,6 +32,7 @@ zed-editor
     rustc
     cargo
     go
+    nixfmt-rfc-style
 
     # Bancos de dados (clientes; os servidores rodam como serviços do sistema)
     postgresql

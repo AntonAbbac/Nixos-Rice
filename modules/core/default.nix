@@ -13,5 +13,7 @@
     ./services.nix
     ./packages.nix
     ./ssh.nix
+    ./system.nix
+    ./flatpak.nix
   ];
 }

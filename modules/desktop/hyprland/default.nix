@@ -4,6 +4,7 @@
 {
 
   home.packages = with pkgs; [
+    hyprland
     waybar
     swww # wallpaper daemon (substitui hyprpaper, suporta transições)
     grim

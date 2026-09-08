@@ -2,6 +2,13 @@
 
 {
 
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    backupFileExtension = "backup";
+    users.anton = import ../../modules/default.nix;
+    users.miranha = import ../../modules/default.nix;
+  };
   users.users.anton = {
     isNormalUser = true;
     extraGroups = [
