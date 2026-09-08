@@ -31,8 +31,7 @@ zed-editor
     openjdk17
     rustc
     cargo
-    go
-    nixfmt-rfc-style
+    nixfmt
 
     # Bancos de dados (clientes; os servidores rodam como serviços do sistema)
     postgresql
@@ -52,15 +51,4 @@ zed-editor
     typescript-language-server
   ];
 
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-  };
-
-  programs.neovim = {
-    enable = true;
-    extraPackages = with pkgs; [
-      tree-sitter
-    ];
-  };
 }
