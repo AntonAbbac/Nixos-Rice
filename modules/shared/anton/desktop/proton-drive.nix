@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   systemd.user.services.proton-drive-sync = {
     Unit = {
       Description = "Sincronização automática da pasta Documents com o Proton Drive";

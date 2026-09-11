@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{...}: {
   imports = [
     ./shared/anton/desktop/hyprland
     ./shared/anton/desktop/hyprland/programs/kitty
