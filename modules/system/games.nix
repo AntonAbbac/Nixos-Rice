@@ -19,6 +19,7 @@
     bottles
     ryubing
     prismlauncher
+    retroarch
 
     steam-run
     wineWow64Packages.staging

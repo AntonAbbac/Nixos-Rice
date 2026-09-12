@@ -1,26 +1,23 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
     hyprland
+    hyprpicker
+    hypridle
+    hyprlock
     waybar
     awww
     grim
     slurp
     wl-clipboard
+    cliphist
     brightnessctl
     playerctl
     pamixer
     pavucontrol
     networkmanagerapplet
+    wlogout
+    swappy
   ];
-
-  home.pointerCursor = {
-    enable = true;
-    gtk.enable = true;
-    x11.enable = true;
-    package = pkgs.bibata-cursors; # Substitua pelo tema desejado (ex: pkgs.catppuccin-cursors)
-    name = "Bibata-Modern-Classic"; # Nome exato da pasta do tema
-    size = 24; # Tamanho do cursor
-  };
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -29,119 +26,66 @@
     configType = "hyprlang";
 
     settings = {
-      # MONITORS
       monitor = [
         ",preferred,auto,auto"
       ];
 
-      # VARIÁVEIS
       "$terminal" = "kitty";
       "$fileManager" = "thunar";
       "$menu" = "rofi -show drun";
       "$mainMod" = "SUPER";
+      "$screenshotDir" = "$HOME/Pictures/Screenshots";
 
-      # ENVIRONMENT VARIABLES
       env = [
         "HYPRCURSOR_THEME,Bibata-Modern-Classic"
         "HYPRCURSOR_SIZE,20"
         "XCURSOR_THEME,Bibata-Modern-Classic"
         "XCURSOR_SIZE,20"
+        "NIXOS_OZONE_WL,1"
+        "QT_QPA_PLATFORM,wayland;xcb"
+        "QT_QPA_PLATFORMTHEME,qt5ct"
+        "MOZ_ENABLE_WAYLAND,1"
       ];
 
-      # AUTOSTART
       exec-once = [
         "waybar"
-        "awww-daemon"
-        "awww img /etc/dotfiles/modules/themes/wallpapers/firewatch.png"
+        "swww-daemon"
+        "swww img /etc/dotfiles/modules/themes/wallpapers/firewatch.png"
+        "wl-paste --type text --watch cliphist store"
+        "wl-paste --type image --watch cliphist store"
         "nm-applet"
         "dunst"
+        "hypridle"
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+        "syncthing"
       ];
 
-      # LOOK AND FEEL
       general = {
         gaps_in = 5;
         gaps_out = 20;
-
         border_size = 2;
-
-        "col.active_border" = "rgba(cba6f7ee) rgba(89b4faee) 45deg";
-        "col.inactive_border" = "rgba(585b70aa)";
-
         resize_on_border = true;
         allow_tearing = false;
-
         layout = "dwindle";
-      };
-
-      decoration = {
-        rounding = 10;
-        rounding_power = 2;
-
-        active_opacity = 1.0;
-        inactive_opacity = 0.95;
-
-        shadow = {
-          enabled = true;
-          range = 4;
-          render_power = 3;
-          color = "rgba(11111bee)";
-        };
-
-        blur = {
-          enabled = true;
-          size = 3;
-          passes = 2;
-          vibrancy = 0.1696;
-        };
-      };
-
-      animations = {
-        enabled = "yes";
-
-        bezier = [
-          "easeOutQuint,0.23,1,0.32,1"
-          "easeInOutCubic,0.65,0.05,0.36,1"
-          "linear,0,0,1,1"
-          "almostLinear,0.5,0.5,0.75,1.0"
-          "quick,0.15,0,0.1,1"
-        ];
-
-        animation = [
-          "global, 1, 10, default"
-          "border, 1, 5.39, easeOutQuint"
-          "windows, 1, 4.79, easeOutQuint"
-          "windowsIn, 1, 4.1, easeOutQuint, popin 87%"
-          "windowsOut, 1, 1.49, linear, popin 87%"
-          "fadeIn, 1, 1.73, almostLinear"
-          "fadeOut, 1, 1.46, almostLinear"
-          "fade, 1, 3.03, quick"
-          "layers, 1, 3.81, easeOutQuint"
-          "layersIn, 1, 4, easeOutQuint, fade"
-          "layersOut, 1, 1.5, linear, fade"
-          "workspaces, 1, 1.94, almostLinear, fade"
-          "workspacesIn, 1, 1.21, almostLinear, fade"
-          "workspacesOut, 1, 1.94, almostLinear, fade"
-        ];
       };
 
       dwindle = {
         preserve_split = true;
+        smart_split = false;
+        smart_resizing = true;
       };
 
       master = {
         new_status = "master";
       };
 
-      # INPUT
       input = {
         kb_layout = "br";
         kb_variant = "abnt2";
         kb_model = "";
         kb_options = "";
         kb_rules = "";
-
         follow_mouse = 1;
         sensitivity = 0;
 
@@ -150,16 +94,31 @@
         };
       };
 
+      windowrule = [
+        "match:class .*, suppress_event maximize"
+        "match:class ^(pavucontrol)$, float on"
+        "match:class ^(nm-connection-editor)$, float on"
+        "match:class ^(blueman-manager)$, float on"
+        "match:title ^(Picture-in-Picture)$, float on"
+        "match:title ^(Picture-in-Picture)$, pin on"
+        "match:class ^(pavucontrol)$, size 800 600"
+        "match:class ^(discord)$, workspace 9 silent"
+        "match:class ^(Slack)$, workspace 9 silent"
+      ];
+
       bind = [
         "$mainMod, Q, exec, $terminal"
         "$mainMod, C, killactive"
-        "$mainMod, M, exit"
+        "$mainMod, M, exec, wlogout"
+        "$mainMod SHIFT, M, exit"
         "$mainMod, E, exec, $fileManager"
         "$mainMod, V, togglefloating"
         "$mainMod, R, exec, $menu"
         "$mainMod, P, pseudo"
         "$mainMod, J, layoutmsg, togglesplit"
         "$mainMod, F, fullscreen"
+        "$mainMod, L, exec, hyprlock"
+        "$mainMod, X, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
 
         "$mainMod, left, movefocus, l"
         "$mainMod, right, movefocus, r"
@@ -194,8 +153,11 @@
         "$mainMod, mouse_down, workspace, e+1"
         "$mainMod, mouse_up, workspace, e-1"
 
-        ", Print, exec, grim -g \"$(slurp)\" - | wl-copy"
+        ", Print, exec, grim -g \"$(slurp)\" - | swappy -f -"
         "$mainMod, Print, exec, grim - | wl-copy"
+        "$mainMod SHIFT, Print, exec, mkdir -p $screenshotDir && grim $screenshotDir/$(date +%Y-%m-%d_%H-%m-%s).png"
+
+        "$mainMod, W, submap, resize"
       ];
 
       bindm = [
@@ -204,11 +166,11 @@
       ];
 
       bindel = [
-        ",XF86AudioRaiseVolume, exec, pamixer -i 5"
-        ",XF86AudioLowerVolume, exec, pamixer -d 5"
+        ",XF86AudioRaiseVolume, exec, pamixer -i 5 && dunstify -a \"volume\" -u low -i audio-volume-high -h int:value:$(pamixer --get-volume) -h string:x-dunst-stack-tag:volume \"Volume: $(pamixer --get-volume)%\""
+        ",XF86AudioLowerVolume, exec, pamixer -d 5 && dunstify -a \"volume\" -u low -i audio-volume-low -h int:value:$(pamixer --get-volume) -h string:x-dunst-stack-tag:volume \"Volume: $(pamixer --get-volume)%\""
         ",XF86AudioMute, exec, pamixer -t"
-        ",XF86MonBrightnessUp, exec, brightnessctl -e4 -n2 set 5%+"
-        ",XF86MonBrightnessDown, exec, brightnessctl -e4 -n2 set 5%-"
+        ",XF86MonBrightnessUp, exec, brightnessctl -e4 -n2 set 5%+ && dunstify -a \"brightness\" -u low -i display-brightness-high -h string:x-dunst-stack-tag:brightness \"Brilho: $(brightnessctl -m | cut -d, -f4)\""
+        ",XF86MonBrightnessDown, exec, brightnessctl -e4 -n2 set 5%- && dunstify -a \"brightness\" -u low -i display-brightness-low -h string:x-dunst-stack-tag:brightness \"Brilho: $(brightnessctl -m | cut -d, -f4)\""
       ];
 
       bindl = [
@@ -216,11 +178,82 @@
         ", XF86AudioPause, exec, playerctl play-pause"
         ", XF86AudioPlay, exec, playerctl play-pause"
         ", XF86AudioPrev, exec, playerctl previous"
-      ];
-
-      windowrule = [
-        "match:class .*, suppress_event maximize"
+        ", switch:on:Lid Switch, exec, hyprlock"
       ];
     };
+
+    extraConfig = ''
+      submap = resize
+      binde = , right, resizeactive, 20 0
+      binde = , left, resizeactive, -20 0
+      binde = , up, resizeactive, 0 -20
+      binde = , down, resizeactive, 0 20
+      bind = , escape, submap, reset
+      submap = reset
+    '';
+  };
+
+  services.hypridle = {
+    enable = true;
+    settings = {
+      general = {
+        lock_cmd = "pidof hyprlock || hyprlock";
+        before_sleep_cmd = "loginctl lock-session";
+        after_sleep_cmd = "hyprctl dispatch dpms on";
+      };
+      listener = [
+        {
+          timeout = 300;
+          on-timeout = "loginctl lock-session";
+        }
+        {
+          timeout = 330;
+          on-timeout = "hyprctl dispatch dpms off";
+          on-resume = "hyprctl dispatch dpms on";
+        }
+        {
+          timeout = 1800;
+          on-timeout = "systemctl suspend";
+        }
+      ];
+    };
+  };
+
+  programs.hyprlock.enable = true;
+
+  programs.wlogout = {
+    enable = true;
+    layout = [
+      {
+        label = "lock";
+        action = "hyprlock";
+        text = "Lock";
+        keybind = "l";
+      }
+      {
+        label = "logout";
+        action = "hyprctl dispatch exit";
+        text = "Logout";
+        keybind = "e";
+      }
+      {
+        label = "suspend";
+        action = "systemctl suspend";
+        text = "Suspend";
+        keybind = "s";
+      }
+      {
+        label = "reboot";
+        action = "systemctl reboot";
+        text = "Reboot";
+        keybind = "r";
+      }
+      {
+        label = "shutdown";
+        action = "systemctl poweroff";
+        text = "Shutdown";
+        keybind = "p";
+      }
+    ];
   };
 }

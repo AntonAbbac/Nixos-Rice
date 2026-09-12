@@ -33,29 +33,22 @@
       "..." = "cd ../..";
       "...." = "cd ../../..";
 
-      # ls -> eza
       ls = "eza --icons --group-directories-first";
       ll = "eza -lh --icons --group-directories-first";
       la = "eza -lah --icons --group-directories-first";
       lt = "eza -lah --icons --group-directories-first --sort=modified";
       tree = "eza --tree --icons";
 
-      # cat -> bat
       cat = "bat --paging=never";
 
-      # grep -> ripgrep
       grep = "rg";
 
-      # find -> fd
       find = "fd";
 
-      # du -> dust
       du = "dust";
 
-      # ps -> procs
       ps = "procs";
 
-      # Git
       g = "git";
       gs = "git status -sb";
       ga = "git add";
@@ -76,7 +69,6 @@
       gstash = "git stash";
       gpop = "git stash pop";
 
-      # Docker
       d = "docker";
       dc = "docker compose";
       dps = "docker ps";
@@ -86,16 +78,14 @@
       dexec = "docker exec -it";
       dprune = "docker system prune -f";
 
-      rebuild = "cd /etc/dotfiles && git add -A ; sudo nixos-rebuild switch --flake /etc/dotfiles#nixos";
       rebuild-test = "sudo nixos-rebuild test --flake /etc/dotfiles#nixos";
       hm-news = "home-manager news";
       nix-clean = "sudo nix-collect-garbage -d";
       nix-search = "nix search nixpkgs";
-      d-nix = "nix run nixpkgs#deadnix -- --edit ~/dotfiles/nixos";
-      stix = "nix run nixpkgs#statix -- fix ~/dotfiles/nixos";
-      alejandra = "alejandra --write ~/dotfiles/nixos";
+      d-nix = "nix run nixpkgs#deadnix -- --edit /etc/dotfiles";
+      stix = "nix run nixpkgs#statix -- fix /etc/dotfiles";
+      fmt-nix = "alejandra --write /etc/dotfiles";
 
-      # Node/JS
       ni = "npm install";
       nr = "npm run";
       nrd = "npm run dev";
@@ -105,7 +95,6 @@
       pn = "pnpm";
       pnd = "pnpm dev";
 
-      # Python
       py = "python3";
       venv = "python3 -m venv .venv";
       activate = "source .venv/bin/activate";
@@ -121,6 +110,7 @@
 
     interactiveShellInit = ''
       rebuild() {
+        cd /etc/dotfiles && git add -A
         sudo nixos-rebuild switch --flake /etc/dotfiles#''${1:-nixos}
       }
       nixclean() {
@@ -137,18 +127,15 @@
 
         echo "✅ Pronto!"
       }
-      # Opções do Zsh History
       setopt HIST_IGNORE_DUPS
       setopt HIST_IGNORE_ALL_DUPS
       setopt HIST_IGNORE_SPACE
       setopt SHARE_HISTORY
 
-      # mkdir + cd num comando só
       mkcd() {
         mkdir -p "$1" && cd "$1"
       }
 
-      # Extrai qualquer arquivo compactado
       extract() {
         if [ -f "$1" ]; then
           case "$1" in
@@ -170,17 +157,14 @@
         fi
       }
 
-      # git commit + push num comando
       gcp() {
         git commit -m "$1" && git push
       }
 
-      # git clone e entra na pasta
       gclone() {
         git clone "$1" && cd "$(basename "$1" .git)"
       }
 
-      # cd inteligente para arquivos
       cdf() {
         if [ -f "$1" ]; then
           builtin cd "$(dirname "$1")"
@@ -189,22 +173,18 @@
         fi
       }
 
-      # Busca um processo pelo nome
       psg() {
         procs | rg -i "$1"
       }
 
-      # Mata processo pela porta
       killport() {
         lsof -ti :"$1" | xargs kill -9
       }
 
-      # Cria um backup rápido de um arquivo
       bak() {
         cp "$1" "$1.bak"
       }
 
-      # fzf: Configurações de teclado e preview com bat/eza
       source ${pkgs.fzf}/share/fzf/key-bindings.zsh
       source ${pkgs.fzf}/share/fzf/completion.zsh
       export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"

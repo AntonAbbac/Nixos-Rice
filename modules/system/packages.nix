@@ -1,9 +1,7 @@
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     foot
-    dmenu
     firefox
     unzip
     zip
@@ -13,6 +11,7 @@
     protonmail-desktop
     proton-authenticator
     rclone
+    syncthing
   ];
 
   nixpkgs.config.permittedInsecurePackages = [

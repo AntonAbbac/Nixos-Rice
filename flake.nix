@@ -8,6 +8,11 @@
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
     hyprland.url = "github:hyprwm/Hyprland";
+    stylix.url = "github:danth/stylix";
+    sysc-greet = {
+      url = "github:Nomadcxx/sysc-greet";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -18,6 +23,7 @@
   outputs = {
     nixpkgs,
     home-manager,
+    stylix,
     ...
   } @ inputs: let
     mkHost = {hostname}:
@@ -28,8 +34,9 @@
 
         modules = [
           ./hosts/${hostname}/configuration.nix
-
+          inputs.sysc-greet.nixosModules.default
           inputs.nix-flatpak.nixosModules.nix-flatpak
+          stylix.nixosModules.stylix
 
           home-manager.nixosModules.home-manager
           {

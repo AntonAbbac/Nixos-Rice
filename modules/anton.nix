@@ -6,7 +6,6 @@
     ./shared/anton/desktop/hyprland/programs/rofi
     ./shared/anton/desktop/hyprland/programs/waybar
     ./shared/programming/default.nix
-    ./shared/anton/desktop/proton-drive.nix
   ];
 
   home.stateVersion = "25.11";

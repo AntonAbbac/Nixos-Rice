@@ -13,5 +13,6 @@
     ./ssh.nix
     ./system.nix
     ./flatpak.nix
+    ./syscgreet.nix
   ];
 }
