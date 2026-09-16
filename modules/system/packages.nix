@@ -1,8 +1,6 @@
 {pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     wget
-    foot
-    firefox
     unzip
     zip
     obsidian
@@ -12,6 +10,10 @@
     proton-authenticator
     rclone
     syncthing
+    whatsapp-electron
+    github-desktop
+    thunar-archive-plugin
+    file-roller
   ];
 
   nixpkgs.config.permittedInsecurePackages = [
