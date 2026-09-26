@@ -10,10 +10,6 @@
     proton-authenticator
     rclone
     syncthing
-    whatsapp-electron
-    github-desktop
-    thunar-archive-plugin
-    file-roller
   ];
 
   nixpkgs.config.permittedInsecurePackages = [
