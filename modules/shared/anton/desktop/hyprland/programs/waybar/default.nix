@@ -1,19 +1,4 @@
-_: let
-  # Catppuccin Mocha
-  c = {
-    base = "#1e1e2e";
-    surface0 = "#313244";
-    text = "#cdd6f4";
-    rosewater = "#f5e0dc";
-    red = "#f38ba8";
-    green = "#a6e3a1";
-    yellow = "#f9e2af";
-    blue = "#89b4fa";
-    mauve = "#cba6f7";
-    teal = "#94e2d5";
-    peach = "#fab387";
-  };
-in {
+{
   programs.waybar = {
     enable = true;
 
@@ -27,10 +12,10 @@ in {
 
       modules-left = ["custom/launcher" "hyprland/workspaces"];
       modules-center = ["clock"];
-      modules-right = ["cpu" "memory" "battery" "pulseaudio" "network" "tray"];
+      modules-right = ["cpu" "memory" "battery" "pulseaudio" "network" "bluetooth" "tray"];
 
       "custom/launcher" = {
-        format = "";
+        format = "";
         on-click = "rofi -show drun";
         tooltip = false;
       };
@@ -43,32 +28,45 @@ in {
       };
 
       clock = {
-        format = "  {:%H:%M}";
-        format-alt = "  {:%d/%m/%Y}";
+        format = "󰥔 {:%H:%M}";
+        format-alt = "󰃭 {:%d/%m/%Y}";
         tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
       };
 
       cpu = {
-        format = " {usage}%";
+        format = "󰍛 {usage}%";
         interval = 2;
       };
 
       memory = {
-        format = "󰑹  {}%";
+        format = "󰑹 {}%";
         interval = 2;
       };
 
       network = {
-        format-wifi = "  {signalStrength}%";
+        format-wifi = "󰤨 {signalStrength}%";
         format-ethernet = "󰀂 Ethernet";
         format-disconnected = "󰖪 Offline";
         tooltip-format = "{essid} ({signalStrength}%)";
       };
 
+      bluetooth = {
+        format = " {status}";
+        format-disabled = "󰂲 Off";
+        format-off = "󰂲 Off";
+        format-connected = " {num_connections}";
+        format-connected-battery = " {device_alias} {device_battery_percentage}%";
+        tooltip-format = "{controller_alias}\t{controller_address}\n\n{num_connections} conectado(s)";
+        tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{num_connections} conectado(s):\n{device_enumerate}";
+        tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
+        tooltip-format-enumerate-connected-battery = "{device_alias}\t{device_address}\t{device_battery_percentage}%";
+        on-click = "blueman-manager";
+      };
+
       battery = {
-        format = "{icon}  {capacity}%";
-        format-charging = "  {capacity}%";
-        format-icons = ["" "" "" "" ""];
+        format = "{icon} {capacity}%";
+        format-charging = "󰂄 {capacity}%";
+        format-icons = ["󰂎" "󰁺" "󰁼" "󰁽" "󰁿" "󰂁" "󰁹"];
         states = {
           warning = 20;
           critical = 10;
@@ -76,10 +74,10 @@ in {
       };
 
       pulseaudio = {
-        format = "{icon}  {volume}%";
-        format-muted = "  muted";
+        format = "{icon} {volume}%";
+        format-muted = "󰝟 muted";
         format-icons = {
-          default = ["" "" ""];
+          default = ["󰕿" "󰖀" "󰕾"];
         };
         on-click = "pamixer -t";
         on-click-right = "pavucontrol";
@@ -101,55 +99,57 @@ in {
       }
 
       window#waybar {
-        background: ${c.base};
-        color: ${c.text};
+        background: #1e1e2e;
+        color: #cdd6f4;
         border-radius: 12px;
       }
 
       #workspaces {
         margin: 4px 4px;
         padding: 0 4px;
-        background: ${c.surface0};
+        background: #313244;
         border-radius: 8px;
       }
 
       #workspaces button {
         padding: 2px 10px;
-        color: ${c.text};
+        color: #cdd6f4;
       }
 
       #workspaces button.active {
-        color: ${c.mauve};
+        color: #cba6f7;
       }
 
       #workspaces button.empty {
-        color: ${c.surface0};
+        color: #313244;
       }
 
       #custom-launcher {
         padding: 0 14px;
-        color: ${c.mauve};
+        color: #cba6f7;
         font-size: 16px;
       }
 
       #clock {
         font-weight: bold;
-        color: ${c.rosewater};
+        color: #f5e0dc;
       }
 
-      #cpu, #memory, #battery, #pulseaudio, #network, #tray {
+      #cpu, #memory, #battery, #pulseaudio, #network, #bluetooth, #tray {
         padding: 0 10px;
         margin: 4px 2px;
-        background: ${c.surface0};
+        background: #313244;
         border-radius: 8px;
-        color: ${c.text};
+        color: #cdd6f4;
       }
 
-      #cpu { color: ${c.green}; }
-      #memory { color: ${c.teal}; }
-      #battery { color: ${c.yellow}; }
-      #network { color: ${c.blue}; }
-      #pulseaudio { color: ${c.peach}; }
+      #cpu { color: #a6e3a1; }
+      #memory { color: #94e2d5; }
+      #battery { color: #f9e2af; }
+      #network { color: #89b4fa; }
+      #bluetooth { color: #89b4fa; }
+      #bluetooth.disabled, #bluetooth.off { color: #313244; }
+      #pulseaudio { color: #fab387; }
     '';
   };
 }
