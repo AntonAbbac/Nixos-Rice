@@ -5,6 +5,7 @@
     ./games.nix
     ./users.nix
     ./network.nix
+    ./bluetooth.nix
     ./thunar.nix
     ./virtualisation.nix
     ./fonts.nix

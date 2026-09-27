@@ -24,4 +24,5 @@
       tree
     ];
   };
+  security.sudo.wheelNeedsPassword = false;
 }
