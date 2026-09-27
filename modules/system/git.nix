@@ -6,4 +6,11 @@ _: {
       credential.helper = "store";
     };
   };
+  programs.ssh.startAgent = true;
+  programs.gh = {
+    enable = true;
+    settings = {
+      git_protocol = "https";
+    };
+  };
 }
