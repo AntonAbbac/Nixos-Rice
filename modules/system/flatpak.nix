@@ -3,7 +3,6 @@
   services.flatpak = {
     enable = true;
     packages = [
-      "io.gitlab.librewolf-community"
     ];
   };
 }
