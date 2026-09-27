@@ -1,9 +1,8 @@
 _: {
-  # networking.hostName = "nixos"; # Define your hostname.
+  #networking.hostName = "hydra-nixos";
 
   # Configure network connections interactively with nmcli or nmtui.
   networking.networkmanager.enable = true;
-
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];

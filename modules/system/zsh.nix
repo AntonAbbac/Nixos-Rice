@@ -106,6 +106,7 @@
       myip = "curl -s ifconfig.me";
       ports = "sudo ss -tulpn";
       weather = "curl -s wttr.in";
+      ytm = "ytfzf -m";
     };
 
     interactiveShellInit = ''
